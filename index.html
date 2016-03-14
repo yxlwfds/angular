@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta charset="utf-8"/>
+    <link rel="stylesheet" href="//apps.bdimg.com/libs/bootstrap/3.3.4/css/bootstrap.min.css"/>
+    <script src="http://cdn.bootcss.com/angular.js/1.5.0/angular.min.js"></script>
+</head>
+<body ng-app="optionsExample">
+<div ng-controller="ExampleController">
+    <div>
+        共有 {{skus.length}} 个产品. 你可以搜索:
+        <input type="search" ng-model="q" placeholder="输入名字即可搜索"/>
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>预览图片</th>
+                <th>修改图片</th>
+                <th>商品ID</th>
+                <th>商品名称</th>
+                <th>品类</th>
+                <th>价格</th>
+                <th>入库时间</th>
+                <th>状态</th>
+                <th width="36%">
+                    <table width="100%" class="text-left">
+                        <td width="12%">skuid</td>
+                        <td width="28%">商家SKU</td>
+                        <td width="10%">颜色</td>
+                        <td width="10%">尺码</td>
+                        <td width="10%">原价</td>
+                        <td width="10%">折扣</td>
+                    </table>
+                </th>
+            </thead>
+            <tbody ng-repeat="sku in skus | filter:q as results">
+            <tr>
+                <td><img ng-src="{{sku.skuurl}}" width="22" height="22"/></td>
+                <td><img ng-src="{{sku.skuurl}}" width="22" height="22"/></td>
+                <td>{{ sku.pid }}</td>
+                <td>{{ sku.name }}</td>
+                <td>{{ sku.type }}</td>
+                <td>{{ sku.selling_price }}</td>
+                <td>{{ sku.create_time |date:'yyyy-MM-dd HH点mm分' }}</td>
+                <td>{{ sku.state }}</td>
+                <td ng-hide="sku.sku_infos"></td>
+                <td ng-hide="sku.sku_infos"></td>
+                <td ng-hide="sku.sku_infos"></td>
+                <td ng-hide="sku.sku_infos"></td>
+                <td ng-hide="sku.sku_infos"></td>
+                <td ng-hide="sku.sku_infos"></td>
+                <td>
+                    <table ng-repeat="skuinfo in sku.sku_infos" class="table table-striped">
+                        <tbody>
+
+                        <!--<p ng-if="sku.sku_infos">V</p>-->
+                        <br ng-if="sku.sku_infos">
+                        <tr class="text-left">
+                            <td width="12%">{{ skuinfo.sid }}</td>
+                            <td width="28%">{{skuinfo.sku}}</td>
+                            <td width="10%">{{skuinfo.attribute[0].name}}</td>
+                            <td width="10%">{{skuinfo.attribute[1].name}}</td>
+                            <td width="10%">{{skuinfo.original_price}}</td>
+                            <td width="10%">{{skuinfo.discount_rate}}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+    </div>
+</div>
+
+<script>
+    angular.module('optionsExample', [])
+            .controller('ExampleController', function ($scope, $http) {
+                $http.get("http://127.0.0.1:8000/p/api/seller/products?offset=0&limit=1000")
+                        .success(function (response) {
+                            $scope.skus = response.rows;
+                        });
+            });
+</script>
+</body>
+</html>
